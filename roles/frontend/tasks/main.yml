@@ -1,0 +1,35 @@
+---
+  - name: Create APP directory
+    file:
+      path: /opt/app
+      owner: apache
+      group: apache
+      mode: 0755
+      state: directory
+
+  - name: Create Release directory
+    file:
+      path: /opt/app/release
+      owner: apache
+      group: apache
+      mode: 0755
+      state: directory
+
+  - name: Download and extract release
+    unarchive:
+      src: https://github.com/devopsdemoapps/devops-demo-app/archive/{{ app.version }}.tar.gz
+      dest: /opt/app/release
+      owner: apache
+      group: apache
+      creates: /opt/app/release/devops-demo-app-{{ app.version }}
+      remote_src: yes
+
+  - name: Create Symlink
+    file:
+      src: /opt/app/release/devops-demo-app-{{ app.version }}
+      dest: /var/www/html/app
+      owner: apache
+      group: apache
+      state: link
+
+
